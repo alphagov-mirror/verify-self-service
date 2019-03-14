@@ -28,4 +28,6 @@ RSpec.describe Certificate, type: :model do
     certificate = event.certificate
     expect(certificate.events.to_a).to eql [event]
   end
+
+  include_examples 'cannot be persisted outside of an event', Certificate
 end

@@ -29,7 +29,7 @@ class Event < ApplicationRecord
 
     self.aggregate.assign_attributes(attributes_to_apply)
 
-    self.aggregate.save!
+    self.aggregate.save_from_event!
     self.aggregate_id = aggregate.id if aggregate_id.nil?
   end
 
