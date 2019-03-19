@@ -3,7 +3,7 @@ require 'auth_test_helper'
 RSpec.describe ApplicationController, type: :controller do
   
   it "Login URL points to developer provider" do
-    expect(subject.login_url).to eq("/auth/developer")
+    expect(subject.login_path).to eq("/auth/developer")
   end
 
   it "authenticate_user! with session sets @current_user" do

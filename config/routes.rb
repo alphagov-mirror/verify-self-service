@@ -18,4 +18,5 @@ Rails.application.routes.draw do
     # Dashboard
     get 'dashboard' =>'dashboard#show'
   end
+  get "/auth/:provider", to: lambda{ |env| [404, {}, ["Not Found"]] }, as: :oauth
 end

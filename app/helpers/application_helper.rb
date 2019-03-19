@@ -1,7 +1,14 @@
 module ApplicationHelper
    # @return the path to the login page
-  def login_url
-    AUTH_LOGIN_PATH
+  def login_path
+    case Rails.env
+    when 'production'
+      oauth_path('cognito-idp')
+    when 'development'
+      devauth_path
+    when 'test'
+      oauth_path('developer')
+    end
   end
 
   def logout_url
@@ -14,7 +21,7 @@ module ApplicationHelper
             Rails.application.secrets.cognito_user_pool_site,
             "logout?#{query_params}").to_s
     else
-        logout_callback_url
+      logout_callback_url
     end
     
   end

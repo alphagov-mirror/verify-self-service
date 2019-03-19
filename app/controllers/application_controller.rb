@@ -16,7 +16,7 @@ class ApplicationController < ActionController::Base
       @current_user = session[:userinfo]
     else
       session[:redirect_path] = request&.fullpath
-      redirect_to login_url
+      redirect_to login_path
     end
   end
 

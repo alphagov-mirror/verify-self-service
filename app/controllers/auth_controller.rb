@@ -51,6 +51,6 @@ class AuthController < ApplicationController
 
   def destroy
     session[:userinfo] = nil
-    redirect_to login_url
+    redirect_to login_path
   end
 end
