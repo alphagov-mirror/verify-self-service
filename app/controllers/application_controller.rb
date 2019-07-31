@@ -1,6 +1,7 @@
 class ApplicationController < ActionController::Base
   include UserInfo
   include ApplicationHelper
+  include Pundit
   before_action :authenticate_user!
   before_action :set_user
   before_action :configure_permitted_parameters, if: :devise_controller?

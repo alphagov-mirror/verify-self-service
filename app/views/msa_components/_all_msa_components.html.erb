@@ -20,4 +20,6 @@
   </table>
 <% end %>
 
-<%= link_to 'Create new MSA component', new_msa_component_path, class: "govuk-button govuk-button--start", role:"button", draggable:"false" %>
+<% if policy(@msa_components).create? %>
+  <%= link_to 'Create new MSA component', new_msa_component_path, class: "govuk-button govuk-button--start", role:"button", draggable:"false" %>
+<% end %>

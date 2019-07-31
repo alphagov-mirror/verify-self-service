@@ -15,8 +15,10 @@ RSpec.describe UserSignInEvent, type: :model do
       expect(event.user_id).to eq(user_id)
     end
 
-    it 'a valid event with no user id' do
-      expect(event_with_nil_user_id.user_id).to be_nil
+    it 'an event which contains no user id' do
+      Thread.current[:user].user_id = nil
+      nil_event = UserSignInEvent.create(user_id: nil)
+      expect(nil_event.user_id).to eq(nil)
     end
   end
 end
