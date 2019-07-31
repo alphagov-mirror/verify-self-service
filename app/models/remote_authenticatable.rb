@@ -73,7 +73,7 @@ module Devise
         self.phone_number = user_attributes['phone_number']
         self.access_token = access_token
         self.organisation = user_attributes['custom:organisation']
-        self.roles = user_attributes['custom:roles']
+        self.roles = user_attributes['custom:roles'].split(',')
         self.full_name = "#{user_attributes['given_name']} #{user_attributes['family_name']}"
         self.given_name = user_attributes['given_name']
         self.family_name = user_attributes['family_name']

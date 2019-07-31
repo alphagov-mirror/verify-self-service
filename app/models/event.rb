@@ -6,12 +6,12 @@ class Event < ApplicationRecord
 
 private
 
-  def set_user_id
-    self.user_id ||= current_user&.user_id
-  end
-
   def default_values
     self.data ||= {}
+  end
+
+  def set_user_id
+    self.user_id ||= current_user&.user_id
   end
 
   def self.data_attributes(*names) # rubocop:disable  IneffectiveAccessModifier

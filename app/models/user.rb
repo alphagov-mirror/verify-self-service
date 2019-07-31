@@ -19,5 +19,11 @@ class User
   # ignore it for now
   def initialize(options = {}); end
 
+  def has_role(role)
+    return false if roles.nil?
+
+    roles.include? role
+  end
+
   def save!; end
 end

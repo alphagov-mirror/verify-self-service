@@ -4,7 +4,7 @@ class MsaComponentsController < ApplicationController
   end
 
   def new
-    @component = NewMsaComponentEvent.new
+    @component = NewMsaComponentEvent.new(permitted_attributes(NewMsaComponentEvent))
   end
 
   def show
