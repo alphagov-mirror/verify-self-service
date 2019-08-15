@@ -11,6 +11,8 @@ class CertificatesController < ApplicationController
     )
   end
 
+  def test; end
+
   def create
     @upload = UploadCertificateEvent.create(upload_params)
     if @upload.valid?
