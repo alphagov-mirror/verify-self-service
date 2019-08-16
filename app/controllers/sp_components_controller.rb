@@ -7,6 +7,7 @@ class SpComponentsController < ApplicationController
 
   def new
     @component = NewSpComponentEvent.new
+    @hub_environments = ENV['HUB_ENVIRONMENTS'].split(',') || 'test'
   end
 
   def show

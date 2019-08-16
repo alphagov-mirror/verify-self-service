@@ -15,7 +15,7 @@ class PublishServicesMetadataEvent < Event
 
   def upload
     json_data = metadata.to_json
-    storage_key = "verify_services_metadata.json"
+    storage_key = 'verify_services_metadata.json'
     check_sum = Digest::MD5.base64digest(json_data)
     storage_client.upload(
       storage_key,
@@ -27,9 +27,7 @@ class PublishServicesMetadataEvent < Event
 private
 
   def storage_client
-    return SelfService.service(:integration_storage_client) if environment == ENVIRONMENT::INTEGRATION
-
-    SelfService.service(:storage_client)
+    SelfService.service("#{environment}_storage_client".to_sym)
   end
 
   def services_metadata

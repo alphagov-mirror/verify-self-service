@@ -14,9 +14,9 @@ private
 
   def environment(model)
     if model.aggregate.respond_to?(:component)
-      model.aggregate.component.environment
+      model.aggregate.component.environment.downcase
     else
-      model.aggregate.environment
+      model.aggregate.environment.downcase
     end
   end
 end

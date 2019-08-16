@@ -32,22 +32,15 @@ rescue Errno::ENOENT
   {}
 end
 
-SelfService.register_service(
-  name: :storage_client,
-  client: ActiveStorage::Service.configure(
-    Rails.configuration.active_storage.service,
-    configuration('storage.yml')
-  )
-)
-
-if Rails.env.production?
+ENV['HUB_ENVIRONMENTS'].split(',').each do |hub_env|
   SelfService.register_service(
-    name: :integration_storage_client,
+    name: "#{hub_env}_storage_client".to_sym,
     client: ActiveStorage::Service.configure(
       Rails.configuration.active_storage.service,
-      configuration('integration_storage.yml')
+      configuration(hub_env == 'integration' ? 'integration_storage.yml' : 'storage.yml')
     )
   )
 end
+
 
 CognitoChooser.new

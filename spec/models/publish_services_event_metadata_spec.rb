@@ -4,8 +4,8 @@ require 'rails_helper'
 RSpec.describe PublishServicesMetadataEvent, type: :model do
   let(:published_at) { Time.now }
   let(:event_id) { 0 }
-  let(:component) { MsaComponent.create(name: 'lala', entity_id: 'https//test-entity') }
-  let(:event) { PublishServicesMetadataEvent.create(event_id: event_id) }
+  let(:component) { create(:msa_component) }
+  let(:event) { PublishServicesMetadataEvent.create(event_id: event_id, environment: 'test')  }
 
   context '#create' do
     it 'creates a valid event which contains hard-coded data' do
@@ -30,7 +30,7 @@ RSpec.describe PublishServicesMetadataEvent, type: :model do
       expected_chunks = event.metadata
 
       actual_chunks = []
-      SelfService.service(:storage_client).download key do |chunk|
+      SelfService.service(:test_storage_client).download key do |chunk|
         actual_chunks << chunk
       end
 
@@ -40,21 +40,22 @@ RSpec.describe PublishServicesMetadataEvent, type: :model do
 
   context 'upload' do
     before do
-      SelfService.register_service(
-        name: :integration_storage_client,
-        client: ActiveStorage::Service.configure(
-          Rails.configuration.active_storage.service,
-          configuration('integration_storage.yml')
+      %w[integration production].each do |hub_env|
+        SelfService.register_service(
+          name: "#{hub_env}_storage_client".to_sym,
+          client: ActiveStorage::Service.configure(
+            Rails.configuration.active_storage.service,
+            configuration(hub_env == 'integration' ? 'integration_storage.yml' : 'storage.yml')
+          )
         )
-      )
+      end
     end
-
     it 'when environment is set to integration on component' do
       expect(
         SelfService.service(:integration_storage_client)
       ).to receive(:upload)
       expect(
-        SelfService.service(:storage_client)
+        SelfService.service(:test_storage_client)
       ).not_to receive(:upload)
 
       PublishServicesMetadataEvent.create(event_id: 0, environment: ENVIRONMENT::INTEGRATION)
@@ -62,7 +63,7 @@ RSpec.describe PublishServicesMetadataEvent, type: :model do
 
     it 'when environment is set to production on component' do
       expect(
-        SelfService.service(:storage_client)
+        SelfService.service(:production_storage_client)
       ).to receive(:upload)
       expect(
         SelfService.service(:integration_storage_client)
