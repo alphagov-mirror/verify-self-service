@@ -52,6 +52,8 @@ class UserJourneyController < ApplicationController
     end
   end
 
+private
+
   def find_certificate
     @certificate = Certificate.find_by_id(params[:certificate_id])
   end

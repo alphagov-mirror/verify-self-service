@@ -14,7 +14,7 @@ RSpec.describe 'Confirmation page', type: :system do
     expect(page).to have_content 'MSA'
     expect(page).to have_content 'Encryption'
     click_link 'Rotate more certificates'
-    expect(current_path).to eql user_journey_path
+    expect(current_path).to eql root_path
   end
 
   it 'shows confirmation page for sp encryption and successfully goes to next page' do
@@ -24,7 +24,7 @@ RSpec.describe 'Confirmation page', type: :system do
     expect(page).to have_content 'SP'
     expect(page).to have_content 'Encryption'
     click_link 'Rotate more certificates'
-    expect(current_path).to eql user_journey_path
+    expect(current_path).to eql root_path
   end
 
   it 'shows confirmation page for msa signing and successfully goes to next page' do
@@ -34,7 +34,7 @@ RSpec.describe 'Confirmation page', type: :system do
     expect(page).to have_content 'MSA'
     expect(page).to have_content 'Signing'
     click_link 'Rotate more certificates'
-    expect(current_path).to eql user_journey_path
+    expect(current_path).to eql root_path
   end
 
   it 'shows confirmation page for sp signing and successfully goes to next page' do
@@ -44,6 +44,6 @@ RSpec.describe 'Confirmation page', type: :system do
     expect(page).to have_content 'SP'
     expect(page).to have_content 'Signing'
     click_link 'Rotate more certificates'
-    expect(current_path).to eql user_journey_path
+    expect(current_path).to eql root_path
   end
 end
