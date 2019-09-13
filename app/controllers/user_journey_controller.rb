@@ -25,6 +25,15 @@ class UserJourneyController < ApplicationController
     )
   end
 
+  def before_you_start_post
+    @dual_running = params[:dual_running][:value]
+    if @certificate.valid?
+      render 'user_journey/before_you_start'
+    else
+      redirect_to 'user_journey/dual_running'
+    end
+  end
+
   def submit
     @new_certificate_value = (params[:certificate][:value])
     @component = klass_component(@certificate.component_type).find_by_id(@certificate.component_id)

@@ -10,11 +10,19 @@ class UserJourneyControllerPolicy < ApplicationPolicy
     true
   end
 
+  def view_certificate?
+    user.permissions.certificate_management
+  end
+
+  def before_you_start_post?
+    user.permissions.certificate_management
+  end
+
   def before_you_start?
     user.permissions.certificate_management
   end
 
-  def view_certificate?
+  def dual_running?
     user.permissions.certificate_management
   end
 

@@ -227,6 +227,9 @@ en:
       must_update: You must update your %{component} configuration before going to the next step, or your service's connection to GOV.UK Verify will break.
       continue: Continue
       have_updated: I have updated my %{component} configuration
+      not_support_dual_running: Because your service provider does not support dual running, there will be an outage when you rotate the encryption key.
+      update_advice: We recommend you do the update during periods of low traffic for your service.
+      minimise_downtime: You could replace the old encryption key and certificate with the new ones in your service provider configuration now. This will help minimise downtime. Do not apply the changes until your connection is broken.
     certificate:
       component_name: 
         MSA: "Matching Service Adapter: "

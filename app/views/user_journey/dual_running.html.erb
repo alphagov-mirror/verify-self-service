@@ -1,0 +1,21 @@
+<%= render 'shared/certificate_details', certificate: @certificate %>
+
+<%= form_for @certificate, url: before_you_start_path, as: :dual_running do |f| %>
+  <div class="govuk-form-group">
+    <h3 class="govuk-heading-m">Does your service provider support dual running?</h3>
+    <span id="dual-running-hint" class="govuk-hint">
+      If your service provider supports dual running, it can try to decrypt messages from the GOV.UK Verify Hub using both your old and new encryption keys. Your connection will not break.
+    </span>
+    <div class="govuk-radios govuk-radios--inline">
+      <div class="govuk-radios__item ">
+        <%= f.radio_button :value, 'yes', class: 'govuk-radios__input'  %>
+        <%= f.label :value, 'Yes', class: 'govuk-label govuk-radios__label' %>
+      </div>
+      <div class="govuk-radios__item">
+        <%= f.radio_button :value, 'no', class: 'govuk-radios__input'  %>
+        <%= f.label :value, 'No', class: 'govuk-label govuk-radios__label' %>
+      </div>
+    </div>
+    <%= f.submit "Continue", class: "govuk-button", data: { module: "govuk-button" } %>
+  </div>
+<% end %>
