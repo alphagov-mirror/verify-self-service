@@ -50,7 +50,7 @@ Rails.application.routes.draw do
   get '/component/:component_type/:component_id/certificate/:certificate_id/dual-running', to: 'user_journey#dual_running', as: 'dual_running'
 
   get '/component/:component_type/:component_id/certificate/:certificate_id/before-you-start', to: 'user_journey#before_you_start', as: 'before_you_start'
-  patch '/component/:component_type/:component_id/certificate/:certificate_id/before-you-start', to: 'user_journey#before_you_start_post', as: 'before_you_start_post'
+  #patch '/component/:component_type/:component_id/certificate/:certificate_id/before-you-start', to: 'user_journey#before_you_start_post', as: 'before_you_start_post'
 
   get '/component/:component_type/:component_id/certificate/:certificate_id/upload-certificate', to: 'user_journey#upload_certificate', as: 'upload_certificate'
   get '/component/:component_type/:component_id/certificate/:certificate_id/check-your-certificate', to: 'user_journey#upload_certificate', as: 'check_your_certificate'

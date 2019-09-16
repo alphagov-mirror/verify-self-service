@@ -25,13 +25,8 @@ class UserJourneyController < ApplicationController
     )
   end
 
-  def before_you_start_post
-    @dual_running = params[:dual_running][:value]
-    if @certificate.valid?
-      render 'user_journey/before_you_start'
-    else
-      redirect_to 'user_journey/dual_running'
-    end
+  def before_you_start
+    @dual_running = params[:dual_running]
   end
 
   def submit
