@@ -52,12 +52,9 @@ class PasswordController < ApplicationController
       flash.now[:errors] = @form.errors.full_messages.join(', ')
       render :forgot_form, status: :bad_request
     end
-  rescue ToManyAttemptsError
-    flash.now[:errors] = t('password.errors.to_many_attempts')
-    render :forgot_form, status: :bad_request
-  rescue UserBadStateError
-    flash.now[:errors] = t('password.erros.bad_state')
-    render :forgot_form, status: :bad_request
+  rescue TooManyAttemptsError, UserBadStateError, UserGroupNotFoundException
+    @form = PasswordRecoveryForm.new({})
+    render :user_code
   end
 
   def user_code
@@ -82,5 +79,7 @@ class PasswordController < ApplicationController
         render :user_code, status: :bad_request
       end
     end
+  rescue NotAuthorizedException, UserGroupNotFoundException
+    redirect_to new_user_session_path
   end
 end
