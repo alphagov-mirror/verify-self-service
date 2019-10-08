@@ -8,12 +8,10 @@ class ServicesController < ApplicationController
   end
 
   def new
-    @component = component_by_klass_name(params)
     @service_event = NewServiceEvent.new
   end
 
   def create
-    @component = component_by_klass_name(params)
     @service_event = NewServiceEvent.create(service_params)
 
     if @service_event.valid? && @service_event.service.valid?
