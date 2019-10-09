@@ -1,5 +1,5 @@
 class Service < Aggregate
-  belongs_to :sp_component, optional: true
-  belongs_to :msa_component, optional: true
+  has_and_belongs_to_many :msa_components, join_table: "msa_components_services"
+  has_and_belongs_to_many :sp_components, join_table: "sp_components_services"
   validates_uniqueness_of :entity_id
 end

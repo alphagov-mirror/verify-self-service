@@ -1,6 +1,6 @@
 class MsaComponent < Component
   has_many :certificates, as: :component
-  has_many :services
+  has_and_belongs_to_many :services, join_table: "msa_components_services"
 
 private
 
