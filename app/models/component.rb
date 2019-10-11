@@ -45,7 +45,7 @@ class Component < Aggregate
     services.map do |service|
       {
         entity_id: service.entity_id,
-        service_provider_id: service.sp_component_id,
+        service_provider_ids: service.sp_components.map(&:id),
       }
     end
   end
