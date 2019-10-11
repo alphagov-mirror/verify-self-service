@@ -5,6 +5,7 @@ FactoryBot.define do
     name { 'Test Service Provider' }
     team_id { create(:team).id }
     environment { 'staging' }
+    services { [] }
   end
 
   factory :msa_component do
@@ -13,5 +14,6 @@ FactoryBot.define do
     entity_id { 'https://test-entity-id' }
     team_id { create(:team).id }
     environment { 'staging' }
+    services { [] }
   end
 end
