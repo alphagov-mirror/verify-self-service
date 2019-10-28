@@ -5,8 +5,8 @@ RSpec.describe 'View certificate page', type: :system do
 
   let(:user) { login_certificate_manager_user }
   let(:msa_encryption_certificate) { create(:msa_encryption_certificate, component: create(:msa_component, team_id: user.team)) }
-  let(:sp_encryption_certificate) { create(:sp_encryption_certificate, component: create(:sp_component, team_id: user.team)) }  
-  let(:vsp_encryption_certificate) { create(:vsp_encryption_certificate, component: create(:sp_component, vsp: true, team_id: user.team)) }  
+  let(:sp_encryption_certificate) { create(:sp_encryption_certificate, component: create(:sp_component, team_id: user.team)) }
+  let(:vsp_encryption_certificate) { create(:vsp_encryption_certificate, component: create(:sp_component, vsp: true, team_id: user.team)) }
 
   before(:each) do
     ReplaceEncryptionCertificateEvent.create(
@@ -136,6 +136,42 @@ RSpec.describe 'View certificate page', type: :system do
       expect(page).to_not have_button('Add new certificate')
       expect(page).to_not have_content(t('user_journey.wait_for_an_email'))
       expect(page).to have_content(t('user_journey.certificate.stop_using_secondary_warning'))
+    end
+  end
+
+  context 'Stop using certificate' do
+    it 'is secondary' do
+      component = create(:sp_component, team_id: user.team)
+      primary = create(:msa_signing_certificate, component: component)
+      secondary = create(:msa_signing_certificate, component: component)
+      travel_to Time.now + 11.minutes
+
+      visit root_path
+
+      click_link t('user_journey.two_signing_certificate', type: t('user_journey.secondary'))
+      click_link t('user_journey.certificate.stop_using')
+
+      expect(page).to have_selector('h1', text: t('components.title'))
+      expect(page).not_to have_content(t('user_journey.two_signing_certificate', type: t('user_journey.secondary')))
+      expect(page).to have_content(t('user_journey.signing_certificate'))
+    end
+
+    it 'is secondary and fails to publish metadata' do
+      stub_storage_client_service_error
+
+      component = create(:sp_component, team_id: user.team)
+      primary = create(:msa_signing_certificate, component: component)
+      secondary = create(:msa_signing_certificate, component: component)
+      travel_to Time.now + 11.minutes
+
+      visit root_path
+      click_link 'Signing certificate (secondary)'
+      click_link('Stop using this certificate')
+
+      expect(page).to have_selector('h1', text: 'Manage certificates')
+      expect(page).not_to have_content('Signing certificate (secondary)')
+      expect(page).to have_content('Signing certificate')
+      expect(page).to have_content(t('certificates.errors.cannot_publish'))
     end
   end
 end
