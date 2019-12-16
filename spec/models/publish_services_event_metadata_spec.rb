@@ -51,4 +51,42 @@ RSpec.describe PublishServicesMetadataEvent, type: :model do
       expect(event).not_to be_persisted
     end
   end
+
+  context 'initiate hub polling' do
+    let(:service) { create(:service) }
+    let(:msa_encryption_certificate) { create(:msa_encryption_certificate, component: create(:msa_component)) }
+    let(:sp_encryption_certificate) { create(:sp_encryption_certificate, component: create(:sp_component)) }
+    let(:vsp_encryption_certificate) { create(:vsp_encryption_certificate, component: create(:sp_component, vsp: true)) }
+    let(:msa_signing_certificate) { create(:msa_signing_certificate, component: create(:msa_component)) }
+    let(:sp_signing_certificate) { create(:sp_signing_certificate, component: create(:sp_component)) }
+    let(:vsp_signing_certificate) { create(:vsp_signing_certificate, component: create(:sp_component, vsp: true)) }
+
+    before(:each) do
+      SpComponent.destroy_all
+      MsaComponent.destroy_all
+      create(:replace_encryption_certificate_event,
+        component: sp_encryption_certificate.component,
+        encryption_certificate_id: sp_encryption_certificate.id
+      )
+      create(:assign_sp_component_to_service_event, service: service, sp_component_id: sp_encryption_certificate.component.id)
+      create(:replace_encryption_certificate_event,
+        component: msa_encryption_certificate.component,
+        encryption_certificate_id: msa_encryption_certificate.id
+      )
+      create(:replace_encryption_certificate_event,
+        component: vsp_encryption_certificate.component,
+        encryption_certificate_id: vsp_encryption_certificate.id
+      )
+    end
+    it "assigns some association after commit" do
+
+    end
+
+    it 'when there are certificates not in_use by components with services' do
+      expect(Certificate.all_pollable('staging')).to include(sp_encryption_certificate)
+    end
+    it 'does not when no certificates are in_use by components with services' do
+      expect(Certificate.all_pollable('staging')).not_to include(msa_encryption_certificate, msa_encryption_certificate)
+    end
+  end
 end

@@ -4,6 +4,19 @@ class Certificate < Aggregate
   validates_presence_of :usage, :value, :component
   belongs_to :component, polymorphic: true
 
+  scope :all_pollable, ->(environment) {
+    select(:id, :value, :usage, :created_at, :updated_at, :component_id, :enabled, :component_type, :in_use_at, :notification_sent)
+    .joins(sanitize_sql_for_assignment(['
+      LEFT JOIN msa_components
+       ON msa_components.id = certificates.component_id AND msa_components.environment = ?
+      LEFT JOIN sp_components
+       ON sp_components.id = certificates.component_id AND sp_components.environment = ?
+      INNER JOIN services
+       ON sp_components.id = services.sp_component_id OR msa_components.id = services.msa_component_id
+      ', environment, environment]))
+    .where(in_use_at: nil, enabled: true)
+  }
+
   def to_metadata
     { name: x509.subject.to_s, value: self.value }
   end
