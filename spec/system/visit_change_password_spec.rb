@@ -1,7 +1,7 @@
 require 'rails_helper'
 
 RSpec.describe 'ChangePassword', type: :system do
-  include AuthSupport, CognitoSupport, NotifySupport
+  include NotifySupport
   before(:each) do
     login_gds_user
   end
