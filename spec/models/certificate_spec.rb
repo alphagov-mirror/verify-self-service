@@ -17,11 +17,6 @@ RSpec.describe Certificate, type: :model do
     expect(build(:msa_signing_certificate, usage: nil, value: nil)).to_not be_valid
   end
 
-  it 'has events' do
-    event = create(:upload_certificate_event)
-    expect(event.certificate.events.last).to eql(event)
-  end
-
   it 'holds valid metadata' do
     certificate = build(:msa_signing_certificate)
 

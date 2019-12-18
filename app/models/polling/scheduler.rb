@@ -23,8 +23,12 @@ module Polling
       @job = @rufus_scheduler.method("schedule_#{@mode}")
                             .call(@time, **@opts, &action)
       self
+    rescue Rufus::Scheduler::NotRunningError => e
+      Rails.logger.error(e.message.to_s)
+      self
     rescue NameError => e
       Rails.logger.error("#{e}, Expected symbol or string for scheduler i.e in, at, every, interval or cron")
+      self
     end
 
     def action_result

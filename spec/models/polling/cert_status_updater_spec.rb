@@ -27,6 +27,7 @@ RSpec.describe CertStatusUpdater, type: :model do
   describe '#update_hub_usage_status_for_cert' do
     context 'When given an encryption cert belonging to an MSA component' do
       it "leaves the cert unchanged if a call to the Hub does not show it is in use" do
+        allow(Rails.env).to receive(:production?).and_return(true)
         allow(hub_config_api).to receive(:encryption_certificate).and_return(msa_enc_cert_2.value)
 
         expect(msa_enc_cert_1.in_use_at).to be(nil)
@@ -45,6 +46,7 @@ RSpec.describe CertStatusUpdater, type: :model do
 
     context 'When given a signing cert belonging to an MSA component' do
       it "leaves the cert unchanged if a call to the Hub does not show it is in use" do
+        allow(Rails.env).to receive(:production?).and_return(true)
         allow(hub_config_api).to receive(:signing_certificates).and_return([msa_sgn_cert_2.value, msa_sgn_cert_3.value])
 
         expect(msa_sgn_cert_1.in_use_at).to be(nil)
@@ -63,6 +65,7 @@ RSpec.describe CertStatusUpdater, type: :model do
 
     context 'When given an encryption cert belonging to an SP component' do
       it "leaves the cert unchanged if a call to the Hub does not show it is in use for all relevant entity IDs" do
+        allow(Rails.env).to receive(:production?).and_return(true)
         allow(hub_config_api).to receive(:encryption_certificate).with(sp_enc_cert_for_multiple_entities.component.environment, service_1.entity_id).and_return(sp_enc_cert_for_multiple_entities.value)
         allow(hub_config_api).to receive(:encryption_certificate).with(sp_enc_cert_for_multiple_entities.component.environment, service_2.entity_id).and_return(sp_enc_cert_for_single_entity.value)
         allow(hub_config_api).to receive(:encryption_certificate).with(sp_enc_cert_for_multiple_entities.component.environment, service_3.entity_id).and_return(sp_enc_cert_for_multiple_entities.value)
@@ -85,6 +88,7 @@ RSpec.describe CertStatusUpdater, type: :model do
 
     context 'When given a signing cert belonging to an SP component' do
       it "leaves the cert unchanged if a call to the Hub does not show it is in use for all relevant entity IDs" do
+        allow(Rails.env).to receive(:production?).and_return(true)
         allow(hub_config_api).to receive(:signing_certificates).with(sp_sgn_cert_for_multiple_entities.component.environment, service_1.entity_id).and_return(sp_sgn_cert_for_multiple_entities.value, sp_sgn_cert_other.value)
         allow(hub_config_api).to receive(:signing_certificates).with(sp_sgn_cert_for_multiple_entities.component.environment, service_2.entity_id).and_return(sp_sgn_cert_for_single_entity.value, sp_sgn_cert_other.value)
         allow(hub_config_api).to receive(:signing_certificates).with(sp_sgn_cert_for_multiple_entities.component.environment, service_3.entity_id).and_return(sp_sgn_cert_for_multiple_entities.value)
@@ -107,7 +111,7 @@ RSpec.describe CertStatusUpdater, type: :model do
 
     context 'when given a cert belonging to an SP component with no services' do
       it "performs no action" do
-
+        allow(Rails.env).to receive(:production?).and_return(true)
         expect(sp_enc_cert_without_service.in_use_at).to be(nil)
         cert_status_updater.update_hub_usage_status_for_cert(hub_config_api, sp_enc_cert_without_service)
         expect(sp_enc_cert_without_service.in_use_at).to be(nil)

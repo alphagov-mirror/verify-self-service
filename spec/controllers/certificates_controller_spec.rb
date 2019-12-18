@@ -1,4 +1,5 @@
 require 'rails_helper'
+require 'polling/scheduler'
 include AuthSupport
 include CertificateSupport
 
@@ -20,6 +21,7 @@ RSpec.describe CertificatesController, type: :controller do
   describe 'POST #create' do
     it 'redirects after creating a certificate' do
       certmgr_stub_auth
+
       post :create, params: { certificate: { value: sp_signing_certificate.value, usage: CERTIFICATE_USAGE::SIGNING }, sp_component_id: sp_component }
 
       expect(subject).to redirect_to(sp_component_path(sp_component))
