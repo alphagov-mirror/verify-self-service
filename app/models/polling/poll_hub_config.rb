@@ -1,5 +1,7 @@
 require 'polling/cert_status_updater'
+require 'polling/dev_cert_status_updater'
 require 'api/hub_config_api'
+require 'api/stub_hub_config_api'
 
 module PollHubConfig
   def update_pollable_certificates
@@ -13,8 +15,8 @@ private
 
   def poll(scheduler, certificate)
     scheduler.mode(:every)
-             .perform(-> { CertStatusUpdater.new.update_hub_usage_status_for_cert(HUB_CONFIG_API, certificate) })
-             .until(scheduler.action_result.certificate.in_use_at.present?)
+             .perform(-> { CERT_STATUS_UPDATER.update_hub_usage_status_for_cert(HUB_CONFIG_API, certificate) })
+             .until(scheduler.action_result&.certificate&.in_use_at.present?)
   end
 
   def pollable_certificates

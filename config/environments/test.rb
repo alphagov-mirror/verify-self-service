@@ -63,7 +63,10 @@ Rails.application.configure do
   config.app_url = 'www.test.com'
 
   config.after_initialize do
-    require 'api/hub_config_api'
-    HUB_CONFIG_API = HubConfigApi.new
+    require 'api/stub_hub_config_api'
+    HUB_CONFIG_API = StubHubConfigApi.new
+
+    require 'polling/cert_status_updater'
+    CERT_STATUS_UPDATER = CertStatusUpdater.new
   end
 end
