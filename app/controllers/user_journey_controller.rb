@@ -86,34 +86,41 @@ class UserJourneyController < ApplicationController
         component_id: @certificate.component_id,
         component_type: @certificate.component_type,
       )
-
-      if @upload.valid?
-        component = klass_component(@upload.component_type).find_by_id(@upload.component_id)
-        if @upload.certificate.encryption?
-          replace = ReplaceEncryptionCertificateEvent.create(
-            component: component,
-            encryption_certificate_id: @upload.certificate.id,
-          )
-          replaced_certicate_published = check_metadata_published_user_journey(replace.id)
-        end
-
-        certicate_published = check_metadata_published_user_journey(@upload.id)
-
-        if certicate_published && replaced_certicate_published
-          render :confirmation
-        elsif @upload.certificate.signing? && certicate_published
-          render :confirmation
-        else
-          render :publish_failed
-        end
-      else
-        Rails.logger.info(@upload.errors.full_messages.join(', '))
-        render :upload_certificate
-      end
+      valid_upload?(@upload)
     end
   end
 
 private
+
+  def replaced_certicate_published(upload)
+    component = klass_component(upload.component_type).find_by_id(upload.component_id)
+    if upload.certificate.encryption?
+      replace = ReplaceEncryptionCertificateEvent.create(
+        component: component,
+        encryption_certificate_id: upload.certificate.id,
+      )
+      check_metadata_published_user_journey(replace.id)
+    end
+  end
+
+  def certicate_published(upload)
+    check_metadata_published_user_journey(upload)
+  end
+
+  def valid_upload?(upload)
+    if upload.valid?
+      if certicate_published(upload.id) && replaced_certicate_published(upload)
+        render :confirmation
+      elsif upload.certificate.signing? && certicate_published(upload.id)
+        render :confirmation
+      else
+        render :publish_failed
+      end
+    else
+      Rails.logger.info(upload.errors.full_messages.join(', '))
+      render :upload_certificate
+    end
+  end
 
   def find_certificate
     @certificate = Certificate.find_by_id(params[:certificate_id])
